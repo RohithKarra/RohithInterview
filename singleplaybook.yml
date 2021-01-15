@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    custom: 'test1234'
+  tasks:
+    - name: Get the OS info
+      shell: uname -a
+      register: uname
+      ignore_errors: yes
+    - debug: msg={{uname.stdout}}
+
+    - set_fact:
+        var1: "{{uname.stdout}}"
+    - template:
+        src: "/home/cloud_user/RohithKarraInterview/my-template.j2"
+        dest: "/home/cloud_user/RohithKarraInterview/my-template.txt"
