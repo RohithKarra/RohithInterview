@@ -1,0 +1,35 @@
+[
+  {
+    "ParameterKey": "LatestAmiId",
+    "ParameterValue": ""
+  }, 
+  {
+    "ParameterKey": "myLaunchTemplateVersionNumber",
+    "ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "Subnets",
+    "ParameterValue": "[subnet-425f1f0e, subnet-69339002]"
+  },
+  {
+    "ParameterKey": "InstanceTypes",
+    "ParameterValue": "t2.micro"
+  },
+  {
+    "ParameterKey": "DesiredValue",
+    "ParameterValue": "1"
+  },
+  {
+    "ParameterKey": "UserData",
+    "ParameterValue": "$(base64 -w0 userdata.sh)"
+  },
+  {
+    "ParameterKey": "InstanceName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "PortNumber",
+    "ParameterValue": "9000"
+  },
+  
+]
