@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  LatestAmiId:
+    Description: Region specific image from the Parameter Store
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  myLaunchTemplateVersionNumber:
+    Type: String
+  Subnets:
+    Type: CommaDelimitedList
+  InstanceName:
+    Type: String
+  InstanceTypes:
+    Type: String
+  DesiredValue:
+    Type: String
+  UserData:
+    Type: String
+  PortNumber:
+    Type: String
+
+Resources:
+  InstanceSecurityGroup:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+      GroupDescription: Allow http to client host
+      VpcId: vpc-5863d833
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: !Ref PortNumber
+        ToPort: !Ref PortNumber
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol : "-1"
+        CidrIp : 0.0.0.0/0
+  myLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: !Ref LatestAmiId
+        InstanceType: !Ref InstanceTypes
+        UserData: !Ref UserData
+        SecurityGroupIds: !Ref InstanceSecurityGroup
+        Tags:
+          - Key: Name
+            Value: !Ref InstanceName
+          
+  myASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      MinSize: '0'
+      MaxSize: '1'
+      DesiredCapacity: !Ref DesiredValue
+      LaunchTemplate:
+        LaunchTemplateId: !Ref myLaunchTemplate
+        Version: !Ref myLaunchTemplateVersionNumber
+      VPCZoneIdentifier: !Ref Subnets
+      Tags:
+        - Key: Name
+          Value: !Ref InstanceName
+          PropagateAtLaunch: "true"
+      
+  
